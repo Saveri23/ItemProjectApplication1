@@ -17,39 +17,34 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-    // GET /items
+    // GET all items
     @GetMapping
     public List<Item> getAllItems() {
         return itemService.getAllItems();
     }
 
-    // GET /items/{id}
+    // GET item by id
     @GetMapping("/{id}")
     public Item getItemById(@PathVariable int id) {
         Optional<Item> item = itemService.getItemById(id);
         return item.orElse(null);
     }
 
-    // POST /items
+    // POST add item
     @PostMapping
     public Item addItem(@RequestBody Item item) {
         return itemService.addItem(item);
     }
-    // PUT: update existing item
-    public Item updateItem(int id, Item updatedItem) {
-        for (Item i : items) {
-            if (i.getId() == id) {
-                i.setName(updatedItem.getName());
-                i.setPrice(updatedItem.getPrice());
-                return i;
-            }
-        }
-        return null; // not found
+
+    // PUT update item
+    @PutMapping("/{id}")
+    public Item updateItem(@PathVariable int id, @RequestBody Item updatedItem) {
+        return itemService.updateItem(id, updatedItem);
     }
 
-    // DELETE: remove item by id
-    public boolean deleteItem(int id) {
-        return items.removeIf(i -> i.getId() == id);
+    // DELETE item
+    @DeleteMapping("/{id}")
+    public boolean deleteItem(@PathVariable int id) {
+        return itemService.deleteItem(id);
     }
-
 }
