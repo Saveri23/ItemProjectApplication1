@@ -1,5 +1,6 @@
 package com.example.itemapi.controller;
 
+import com.example.itemapi.dto.ApiResponse;
 import com.example.itemapi.model.Item;
 import com.example.itemapi.service.ItemService;
 import org.springframework.web.bind.annotation.*;
@@ -32,19 +33,38 @@ public class ItemController {
 
     // POST add item
     @PostMapping
-    public Item addItem(@RequestBody Item item) {
-        return itemService.addItem(item);
+    public ApiResponse addItem(@RequestBody Item item) {
+        Item savedItem = itemService.addItem(item);
+        return new ApiResponse("Item added successfully", savedItem);
     }
+
 
     // PUT update item
     @PutMapping("/{id}")
-    public Item updateItem(@PathVariable int id, @RequestBody Item updatedItem) {
-        return itemService.updateItem(id, updatedItem);
+    public ApiResponse updateItem(@PathVariable int id,
+                                  @RequestBody Item updatedItem) {
+
+        Item item = itemService.updateItem(id, updatedItem);
+
+        if (item != null) {
+            return new ApiResponse("Item updated successfully", item);
+        } else {
+            return new ApiResponse("Item not found", null);
+        }
     }
+
 
     // DELETE item
     @DeleteMapping("/{id}")
-    public boolean deleteItem(@PathVariable int id) {
-        return itemService.deleteItem(id);
+    public ApiResponse deleteItem(@PathVariable int id) {
+
+        boolean deleted = itemService.deleteItem(id);
+
+        if (deleted) {
+            return new ApiResponse("Item deleted successfully", null);
+        } else {
+            return new ApiResponse("Item not found", null);
+        }
     }
+
 }
